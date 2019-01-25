@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Node training</title>
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome To Our Website</p>
+      <input placeholder="Enter email" name="email" type="text" class="email" id="email" /><br><br>
+      <input placeholder="Phone Number" name="number" type="number" class="number" id="number"><br><br>
+      <input type="text" placeholder="Name" class="name" id="name"><br><br>
+      <textarea placeholder="Comment" class="comment" id="content" cols="40" rows="5"></textarea><br><br>
+      <button class="submit">Submit</button>
+    
+</body>
+  <script src="/javascripts/jquery.js"></script>
+	<script src="/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
+  <script>
+		$(document).ready(function() {
+      var email,number,name,text;
+    $(".submit").click(function(){      
+        email=$(".email").val();
+        number=$(".number").val();
+        name=$(".name").val();
+        text=$("#content").val();
+        $.get("http://localhost:3000/send",{email:email,number:number,name:name,text:text},function(data){
+          console.log(data);
+          alert(data.msg)
+          if(data.flag)
+          {
+            $(".email").val("");
+            $(".number").val("");
+            $(".name").val("");
+            $("#content").val("");
+          }
+        });
+    });
+  });
+  </script>
+</html>

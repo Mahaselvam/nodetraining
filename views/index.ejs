@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Node training</title>
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome  <%= author %></p>
+    
+      <label>To Click to know even or odd</label><br><br>
+      <input placeholder="Enter number" name="number" type="number" class="number" id="number" />
+      <button class="submit">Check</button><br><br>
+      <label>Click to check for leap year</label><br><br>
+      <input placeholder="Enter year" name="year" type="number" class="year" id="year">
+      <button class="sumbit1">Check</button>
+      <div class="result"></div><br><br>
+      <a href="/contact">Contact Us</a><br><br>
+      <a href="/email">Email</a><br><br>
+      <a href="/api">Application Programming Interface</a>
+  </body>
+  <script src="/javascripts/jquery.js"></script>
+	<script src="/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
+  <script>
+		$(document).ready(function() {
+      //alert("Page rendered");
+      $('.submit').click(function(){
+      
+        var number = $('.number').val();
+        //alert(year);
+        if(number==''){
+          alert("Please enter the number");
+        }else {
+          $('.result').html('');
+          $('.result').addClass('loader');
+          //alert(year);
+          var data = {};
+        data.number = number;
+				$.ajax({
+					url : "/even/check",
+					type : "POST",
+					data : data,
+					success : function(data) {
+            console.log(data);
+            $('.result').removeClass('loader');
+            $('.result').html(data.data);
+            //alert(data.data);
+					},
+					error : function() {
+						alert("Something went wrong");
+					}
+				});
+        }
+      });
+
+      $('.sumbit1').click(function(){
+        console.log('leap');
+        var year = $('.year').val();
+
+        if(year==''){
+          alert("Please enter the year");
+        }else{
+          $('.result').html('');
+          $('.result').addClass('loader');
+          var data = {};
+          data.year = year;
+          $.ajax({
+            url : "/leap/check",
+            type: 'POST',
+            data: data,
+            success: function(data) {
+              console.log(data);
+              $('.result').removeClass('loader');
+              $('.result').html(data.data);  
+            },
+            error: function(){
+              alert("Something went wrong");
+            }
+          });
+        }
+        });
+  });
+  </script>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>korean</title>
+</head>
+	<link href="/stylesheets/bootstrap.css" rel="stylesheet">
+<body>
+	<div class="container">  
+		<label><h2>Korean Actors</h2></label><br>
+		<h3>Top Stars</h3><br><br>
+		<input type="text" class="actor_name" placeholder="Enter the Actor name">
+		<button type="button" class="actor_search">Search</button>
+
+		<div class="actor_result"></div><br>
+	</div>
+	<div class="container">
+		<button type="button" class="hero_search">Get 50 Charachter</button>
+
+		<div class="hero_result"></div>
+	</div>
+	
+</body>
+<script src="/javascripts/jquery.js"></script>
+<script src="/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+		$('.hero_search').click(function(){
+			var data= {};
+			data.limit = 20;
+			$.ajax({
+				url: "/hero/json",
+				type: 'POST',
+				data: data,
+				success: function(data){
+					console.log(data);
+					if(data.flag){
+						$('.hero_search').hide()
+						var response = data.data;
+
+						var answerHtml = "";
+						
+						
+						answerHtml += "<div>Answers : </div>"
+						for(var i in response){
+						var arr = response[i];
+						for (var e in arr) {
+							answerHtml += arr[e].name + "<br></br>";
+								}
+						answerHtml += "</div>";
+				
+						}
+						$('.hero_result').html(answerHtml);
+						
+					}else{
+						alert('somwthing went wrong');
+					}
+				},
+				error: function(){
+					alert('something went wrong');
+				}
+			});
+		});
+       $('.actor_search').click(function(){
+           var searchVal = $('.actor_name').val();
+           if(searchVal == ""){
+               alert("Please enter value");
+           }else{
+            var data = {};
+			data.search = searchVal;
+			data.flag = "search";
+			
+			peopleSearchAPI(data)
+        }
+        
+	});
+	
+	function peopleSearchAPI(data) {
+		
+		$.ajax({
+						url : "/wiki",
+						type : "POST",
+						data : data,
+						success : function(data) {
+							console.log( data);
+							if (data.flag) {
+
+								var response = data.data;
+								var forMax = response.results.length;
+								var resultLength = response.count;
+								
+								console.log(response.results);
+
+								if (resultLength > 0) {
+
+									/*if (resultLength > 10) {
+										forMax = 10;
+									} else {
+										forMax = resultLength;
+									}*/
+
+									var htmlResponse = "<h1>shanthi</h1>";
+									htmlResponse += "<div>API testing</div>";
+
+									for (var i = 0; i < forMax; i++) {
+										//console.log(response.results[i].name);
+										var detail = JSON.stringify(response.results[i]);
+										htmlResponse += "<div style='border:3px solid #ccc;margin:10px 0px;padding:20px;'>";
+										$.each($.parseJSON(detail), function(key, value) {
+											//console.log(key + ' : ' + value);
+											htmlResponse += "<div style='margin:10px 0px;'> <span style='color:blue'>" + key + "</span> : <span>" + value + "</span></div>";
+										});
+										htmlResponse += "</div>";
+									}
+
+									var nextBtn;
+									var prevBtn;
+									console.log(response.previous);
+									console.log(response.next);
+									if (response.next == "null" || response.next == null) {
+										nextBtn = "";
+
+									} else {
+										nextBtn = '<button type="button" class="actor_search_pagination" data-page="next" data-url=' + response.next + '>NEXT</button>';
+									}
+
+									if (response.previous == "null" || response.previous == null) {
+										prevBtn = "";
+									} else {
+
+										prevBtn = '<button type="button" class="actor_search_pagination" data-page="prev"  data-url=' + response.previous + '>PREV</button>';
+									}
+
+									console.log(nextBtn);
+									console.log(prevBtn);
+
+									$('.actor_result').html("<div>" + htmlResponse + "</div><div>" + prevBtn + " " + nextBtn + "</div>");
+
+									$('.actor_search_pagination').click(function(){
+										var data = {};
+										data.flag = $(this).data('page');
+										data.url = $(this).data('url');
+										peopleSearchAPI(data);
+										
+									});
+
+
+								} else {
+									alert("No Charachter is present in the given name");
+								}
+							} else {
+								alert("Something went wrong");
+							}
+
+						},
+						error : function() {
+							alert("Something went wrong");
+						}
+					});
+	}
+
+    });
+</script>
+</html>

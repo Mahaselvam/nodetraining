@@ -7,8 +7,10 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome  <%= author %></p>
+    <p>Welcome</p>
     
+    <button class="logout">Logout</button><br>
+    <br>
       <label>To Click to know even or odd</label><br><br>
       <input placeholder="Enter number" name="number" type="number" class="number" id="number" />
       <button class="submit">Check</button><br><br>
@@ -19,12 +21,28 @@
       <a href="/contact">Contact Us</a><br><br>
       <a href="/email">Email</a><br><br>
       <a href="/api">Application Programming Interface</a>
+
+
   </body>
   <script src="/javascripts/jquery.js"></script>
 	<script src="/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
   <script src="/javascripts/bootstrap.min.js"></script>
   <script>
 		$(document).ready(function() {
+      $('.logout').click(function(){
+        $.ajax({
+          url: "/out",
+          type: "post",
+          data: "",
+          success: function(data){
+            console.log("logout succesfully");
+            window.location.href = "/"
+          }, error: function(){
+            alert("something went wrong");
+          }
+
+        });
+      });
       //alert("Page rendered");
       $('.submit').click(function(){
       
@@ -56,7 +74,7 @@
       });
 
       $('.sumbit1').click(function(){
-        console.log('leap');
+        console.log('to check for voting');
         var year = $('.year').val();
 
         if(year==''){

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Node training</title>
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div class="loginbox">
+      <img src="http://deliagroup.com.au/wp-content/uploads/2012/03/maha-logo.png" class="maha">
+        <h1 style="color: salmon">Login Form</h1>
+        <div class="container">
+            <input placeholder="Enter username" name="user" type="text" class="user" id="user" /><br><br>
+            <input placeholder="Enter password" name="pass" type="password" class="pass" id="pass"><br><br>
+            <button class="btn btn-success login-btn" type="submit">Login</button>
+            <button class="btn btn-danger	lost-btn">Forgot my password</button>
+        </div>
+    </div>
+  </body>
+  <script src="/javascripts/jquery.js"></script>
+	<script src="/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
+  <script>
+		$(document).ready(function() {
+      //alert("Page rendered");
+      $('.login-btn').click(function(){
+      var user = $(".user").val();
+      var pass = $(".pass").val();      
+      if(user == "" || pass == ""){
+        alert("username and password is required");
+        
+      }else{
+        
+        var data = {};
+        data.user = user;
+        data.pass = pass;
+        $.ajax({
+          url: "/logdata",
+          type: "post",
+          data: data,
+          success: function(data){
+            alert("success");
+            if(data.flag){
+              window.location.href = "/home"
+            }else{
+              alert("user name or password mismatched");
+              return;
+            }
+          },
+					error : function() {
+						alert("Something went wrong");
+					}
+        });
+      }
+      });
+  });
+  </script>
+</html>
